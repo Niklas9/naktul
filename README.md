@@ -4,6 +4,7 @@ nback
 Backups files and databases (MySQL) to AWS S3
 
 version 1.0 2013-08-19
+
 author: nandersson900@gmail.com
 
 
