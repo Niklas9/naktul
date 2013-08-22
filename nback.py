@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# TODO(niklas):
+# * move all settings to separate file.. so this can be overriden with
+#   new versions easier
 
 # Backup settings
 BACKUP_SERVER_NAME = 'local-dev'
@@ -165,6 +168,10 @@ class nback(Logger):
         self.log.debug('dumped all dbs successfully')
 
     def tar_files(self):
+        # TODO(niklas):
+        # * see how the basic Linux cmd 'tar' and 'bzip2' performs
+        #   compares to this Python native lib.. it seems slow as it is
+        #   now..
         tar_file = tarfile.open(self.filename, 'w:bz2')
         for d in BACKUP_DIRS:
             self.log.debug('adding dir <%s>..' % d)
