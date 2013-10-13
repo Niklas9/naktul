@@ -152,6 +152,9 @@ class nback(Logger):
     def dump_mysql_databases(self):
         # TODO(niklas):
         # * if BACKUP_MYSQL_DBS is empty, backup all dbs
+        # * should listen to mysqldumps exit status, if e.g. password is
+        #   incorrect, it continues as nothing happens with a 0 byte
+        #   database dump
         os.makedirs(self.tmp_db_dir)
         if BACKUP_MYSQL_PASSWD == '':
             q = self.DB_DUMP_QUERY % (BACKUP_MYSQL_DUMP_CMD, BACKUP_MYSQL_USER)
