@@ -1,7 +1,7 @@
 nback
 =====
 
-Backups files and databases (MySQL and MongoDB) to AWS S3
+Backups files and databases (MySQL, MongoDB) to AWS S3
 
 version 1.1 2013-11-06
 
