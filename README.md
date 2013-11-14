@@ -35,5 +35,8 @@ however this is what I've tested with.
 
 Getting started
 ---------------
+
+  - install python-boto if you haven't already (on Debian/Ubuntu, $ sudo
+    apt-get install python-boto)
   - edit settings.py with your settings/credentials
   - add a job to your crontab, and set it to run as often as you want backups
