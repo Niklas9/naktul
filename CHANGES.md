@@ -1,6 +1,11 @@
 Change history
 ==============
 
+2013-12-08, 1.11
+----------------
+
+  - fixed support for gzip as well, editable in the settings file
+
 
 2013-11-06, 1.1 
 ----------------

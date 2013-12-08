@@ -23,7 +23,7 @@ class Backup(logger.Logger):
     dbs = None
     # NOTE(niklas9):
     # * if FILENAME_FMT is changed, need to change _get_backup_filename() also
-    FILENAME_FMT = '%s-%s.tar.bz2'
+    FILENAME_FMT = '%s-%s.tar.' + settings.BACKUP_COMPRESSION_ALGO
     NOTI_TIMESTAMP_FMT = '%Y-%m-%d %H:%M'
 
     def __init__(self, *args, **kwargs):
@@ -50,7 +50,8 @@ class Backup(logger.Logger):
         #   compares to this Python native lib.. it seems slow as it is
         #   now..
         self.log.info('taring files...')
-        tar_file = tarfile.open(self.filename, 'w:bz2')
+        mode = 'w:%s' % settings.BACKUP_COMPRESSION_ALGO
+        tar_file = tarfile.open(self.filename, mode=mode)
         for d in settings.BACKUP_DIRS:
             self.log.debug('adding dir <%s>..' % d)
             tar_file.add(d)
