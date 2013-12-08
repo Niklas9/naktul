@@ -28,7 +28,7 @@ It might work with other versions of the software given below,
 however this is what I've tested with.
 
   - *nix-like environment
-  - bzip2
+  - bzip2 or gzip
   - Python >= 2.7.3 (only dep. python-boto)
   - MySQL >= 5.0 (optional)
   - MongoDB >= 2.0.4 (optional)
