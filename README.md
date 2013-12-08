@@ -3,7 +3,7 @@ nback
 
 Backups files and databases (MySQL, MongoDB) to AWS S3
 
-version 1.1 2013-11-06
+version 1.11 2013-12-08
 
 author: nandersson900@gmail.com
 
@@ -15,7 +15,8 @@ Features
   - uses mysqldump to take complete SQL dump of all mysql dbs
   - uses mongodump to take complete BSON dump of all mongodb dbs
   - saves backups for 7 days back and the first of every month indefinitely
-  - uses the bzip2 compression algorithm for the smallest possible footprint
+  - choose between gzip and bzip2 compression algorithms for fastest or
+    smallest possible footprint
   - notifies any given email address every time backup is done
   - use bash shell for prettier log coloring
 
