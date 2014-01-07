@@ -15,6 +15,9 @@ def get_timestamp(fmt=None, days_back=0):
 
 def file_size_fmt(bytes, precision=0):
     ''' Returns a humanized string for a given amount of bytes '''
+    # TODO(niklas9):
+    # * fix this to be more detailed, right now '2GB' is returned for a
+    #   file taking 1.6GB
     bytes = int(bytes)
     if bytes is 0:  return FILESIZE_ZERO
     log = math.floor(math.log(bytes, FILESIZE_1KB))
