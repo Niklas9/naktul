@@ -1,6 +1,12 @@
 Change history
 ==============
 
+2014-01-08, 1.12
+----------------
+
+  - added support for optional SMTP settings, also supporting using TLS
+    encryption for SMTP
+
 2013-12-08, 1.11
 ----------------
 
