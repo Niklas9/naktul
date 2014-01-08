@@ -16,8 +16,15 @@ BACKUP_MYSQL_PASSWD = ''
 # MongoDB database
 USE_MONGODB = True
 BACKUP_MONGODB_DBS = ('test',)
-BACKUP_NOTIFICATION_FROM = 'info@example.com'
-BACKUP_NOTIFICATION_CONTACTS = ('your@email.com',)
+
+# Notification settings
+EMAIL_FROM = 'info@example.com'
+EMAIL_CONTACTS = ('your@email.com',)
+EMAIL_USE_TLS = True
+EMAIL_TLS_PORT = 587
+SMTP_HOST = 'localhost'
+SMTP_USERNAME = ''
+SMTP_PASSWD = ''
 
 # Amazon AWS S3 settings
 AWS_BUCKET = 'servers'

@@ -95,7 +95,7 @@ class Backup(logger.Logger):
         body = ('%s\n\n%s\nTotal filesize: %s\nDatabases: %d'
                 % (subject, self.filename, self.filesize,
                    len(settings.BACKUP_MYSQL_DBS)))
-        for email in settings.BACKUP_NOTIFICATION_CONTACTS:
+        for email in settings.EMAIL_CONTACTS:
             self.log.debug('sending notification to <%s>..' % email)
             notification.Email.send(email, subject, body)
         self.log.debug('all notifications sent')
