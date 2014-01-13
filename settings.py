@@ -5,6 +5,7 @@ BACKUP_DAYS_TO_STORE = 7  # number of days
 BACKUP_SAVE_EVERY_MONTH = True  # stores the backup from the first every month
 BACKUP_LOG_FILE = 'nback.log'
 BACKUP_COMPRESSION_ALGO = 'gz'  # viable options: 'bz2', 'gz'
+BACKUP_TAR_IGNORE_FAILED_READ = False
 
 # MySQL database
 USE_MYSQL = True

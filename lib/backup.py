@@ -1,6 +1,5 @@
 
 import os
-import tarfile
 
 import lib.db.mongodb as mongodb_dump
 import lib.db.mysql as mysql_dump
@@ -21,10 +20,13 @@ class Backup(logger.Logger):
     filename = None
     filesize = None
     dbs = None
-    # NOTE(niklas9):
-    # * if FILENAME_FMT is changed, need to change _get_backup_filename() also
-    FILENAME_FMT = '%s-%s.tar.' + settings.BACKUP_COMPRESSION_ALGO
+    FILENAME_FMT = '%s-%s.tar'
     NOTI_TIMESTAMP_FMT = '%Y-%m-%d %H:%M'
+    TAR_BIN = '/bin/tar'
+    GZIP_CODE = 'gz'
+    GZIP_BIN = '/bin/gzip'
+    BZIP2_CODE = 'bz2'
+    BZIP2_BIN = '/bin/bzip2'
 
     def __init__(self, *args, **kwargs):
         logger.Logger.__init__(self, *args, **kwargs)
@@ -45,20 +47,36 @@ class Backup(logger.Logger):
             db.dump()
 
     def tar_files(self):
-        # TODO(niklas):
-        # * see how the basic Linux cmd 'tar' and 'bzip2' performs
-        #   compares to this Python native lib.. it seems slow as it is
-        #   now..
+        # TODO(nandersson):
+        # * add support for xz compression
         self.log.info('taring files...')
-        mode = 'w:%s' % settings.BACKUP_COMPRESSION_ALGO
-        tar_file = tarfile.open(self.filename, mode=mode)
+        cmd_raw = '%s -cf %s'
+        if settings.BACKUP_TAR_IGNORE_FAILED_READ:
+            cmd_raw = '%s --ignore-failed-read -cf %s'
+        cmd = cmd_raw % (self.TAR_BIN, self.filename)
+        dirs = []
         for d in settings.BACKUP_DIRS:
             self.log.debug('adding dir <%s>..' % d)
-            tar_file.add(d)
+            dirs.append(d)
         for db in self.dbs:
             self.log.debug('adding db dir <%s>..' % db.get_tmp_dir())
-            tar_file.add(db.get_tmp_dir())
-        tar_file.close()
+            dirs.append(db.get_tmp_dir())
+        # put cmd string together with dirs
+        for d in dirs:  cmd += ' %s' % d
+        if len(dirs) == 0:
+            self.log.warn('no dirs to backup, proceeding..')
+            return
+        self.log.debug('taring..')
+        os.system(cmd)
+        self.log.debug('taring complete')
+        self.log.debug('compressing with <%s>' %
+                       settings.BACKUP_COMPRESSION_ALGO)
+        if settings.BACKUP_COMPRESSION_ALGO == self.GZIP_CODE:
+            os.system('%s %s' % (self.GZIP_BIN, self.filename))
+            self.filename += '.%s' % self.GZIP_CODE
+        elif settings.BACKUP_COMPRESSION_ALGO == self.BZIP2_CODE:
+            os.system('%s %s' % (self.BZIP2_BIN, self.filename))
+            self.filename += '.%s' % self.BZIP2_CODE
         self.filesize = utils.file_size_fmt(os.path.getsize(self.filename))
         self.log.debug('<%s> saved compressed, <%s>' % (self.filename,
                                                         self.filesize))
