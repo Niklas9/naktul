@@ -20,13 +20,11 @@ class Backup(logger.Logger):
     filename = None
     filesize = None
     dbs = None
-    FILENAME_FMT = '%s-%s.tar'
+    FILENAME_FMT = '%s-%s.tar.%s'
     NOTI_TIMESTAMP_FMT = '%Y-%m-%d %H:%M'
     TAR_BIN = '/bin/tar'
-    GZIP_CODE = 'gz'
-    GZIP_BIN = '/bin/gzip'
-    BZIP2_CODE = 'bz2'
-    BZIP2_BIN = '/bin/bzip2'
+    GZIP_SUFFIX = 'gz'
+    BZIP2_SUFFIX = 'bz2'
 
     def __init__(self, *args, **kwargs):
         logger.Logger.__init__(self, *args, **kwargs)
@@ -49,11 +47,18 @@ class Backup(logger.Logger):
     def tar_files(self):
         # TODO(nandersson):
         # * add support for xz compression
-        self.log.info('taring files...')
-        cmd_raw = '%s -cf %s'
+        # * refactor this method, magic variables, more helper methods etc
+        self.log.info('taring and compressing files...')
+        self.log.debug('compressing with <%s>' %
+                       settings.BACKUP_COMPRESSION_ALGO)
+        tar_arg_comp = 'z'
+        if settings.BACKUP_COMPRESSION_ALGO == self.BZIP2_SUFFIX:
+            tar_arg_comp = 'j'
+        tar_args = '-c%sf' % tar_arg_comp
+        cmd_raw = '%s %s %s'
         if settings.BACKUP_TAR_IGNORE_FAILED_READ:
-            cmd_raw = '%s --ignore-failed-read -cf %s'
-        cmd = cmd_raw % (self.TAR_BIN, self.filename)
+            cmd_raw = '%s --ignore-failed-read %s %s'
+        cmd = cmd_raw % (self.TAR_BIN, tar_args, self.filename)
         dirs = []
         for d in settings.BACKUP_DIRS:
             self.log.debug('adding dir <%s>..' % d)
@@ -66,17 +71,9 @@ class Backup(logger.Logger):
         if len(dirs) == 0:
             self.log.warn('no dirs to backup, proceeding..')
             return
-        self.log.debug('taring..')
+        self.log.debug('executing cmd <%s>..' % cmd)
         os.system(cmd)
-        self.log.debug('taring complete')
-        self.log.debug('compressing with <%s>' %
-                       settings.BACKUP_COMPRESSION_ALGO)
-        if settings.BACKUP_COMPRESSION_ALGO == self.GZIP_CODE:
-            os.system('%s %s' % (self.GZIP_BIN, self.filename))
-            self.filename += '.%s' % self.GZIP_CODE
-        elif settings.BACKUP_COMPRESSION_ALGO == self.BZIP2_CODE:
-            os.system('%s %s' % (self.BZIP2_BIN, self.filename))
-            self.filename += '.%s' % self.BZIP2_CODE
+        self.log.debug('cmd complete')
         self.filesize = utils.file_size_fmt(os.path.getsize(self.filename))
         self.log.debug('<%s> saved compressed, <%s>' % (self.filename,
                                                         self.filesize))
@@ -95,7 +92,8 @@ class Backup(logger.Logger):
 
     def gen_filename(self):
         return self.FILENAME_FMT % (settings.BACKUP_SERVER_NAME,
-                                    utils.get_timestamp())
+                                    utils.get_timestamp(),
+                                    settings.BACKUP_COMPRESSION_ALGO)
 
     def cleanup(self):
         self.log.info('cleaning up...')
