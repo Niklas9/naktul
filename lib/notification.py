@@ -18,7 +18,7 @@ class Email(object):
         if passwd is None:  passwd = settings.SMTP_PASSWD
         if use_tls is None:  use_tls = settings.EMAIL_USE_TLS
         if port is None and use_tls:  port = settings.EMAIL_TLS_PORT
-        if port is None:  port = DEFAULT_SMTP_PORT
+        if port is None:  port = self.DEFAULT_SMTP_PORT
         headers = Email.MSG_FMT % (sender, to, subject)
         smtp = smtplib.SMTP(host, port=port)
         if use_tls:
