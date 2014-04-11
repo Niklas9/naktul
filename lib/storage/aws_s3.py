@@ -1,5 +1,7 @@
 
 import boto
+import glob
+import os
 
 import lib.logger as logger
 import lib.utils as utils
@@ -9,6 +11,10 @@ import settings
 class AWSS3(logger.Logger):
 
     FIRST_DAY_OF_MONTH = '01'
+    MB_IN_BYTES = 1049000
+    MULTIPART_UPLOAD_CHUNK_SIZE = 1000 * MB_IN_BYTES
+    SPLIT_FILES_CMD = 'split -b %d %s %s'
+    FILES_ALL_PREFIX = '%s*'
 
     log_file = settings.BACKUP_LOG_FILE
     ref_class = 'aws-s3'
@@ -34,13 +40,17 @@ class AWSS3(logger.Logger):
         self.conn.close()
         self.log.debug('connection to AWS S3 closed')
 
-    def upload(self, filename):
-        filepath = '%s/%s' % (settings.AWS_DIR, filename)
+    def upload(self, src):
+        dest = '%s/%s' % (settings.AWS_DIR, src)
+        src_file_size = os.path.getsize(src)
         k = boto.s3.key.Key(self.bucket)
-        k.key = filepath
-        self.log.debug('uploading...')
-        k.set_contents_from_filename(filename)
-        self.log.debug('upload successful')
+        k.key = dest
+        self.log.debug('created S3 key %r' % k)
+        self.log.debug('source filesize is <%d> bytes' % src_file_size)
+        if src_file_size < self.MULTIPART_UPLOAD_CHUNK_SIZE:
+            self._standard_transfer(k, src, dest)
+        else:
+            self._multipart_transfer(k, src, src_file_size, dest)
 
     def sync(self, filename):
         # TODO(nandersson):
@@ -63,6 +73,46 @@ class AWSS3(logger.Logger):
                 k.delete()
                 self.log.debug('removed outdated backup <%s>' % k.key)
         self.log.debug('everything in sync')
+
+    def _standard_transfer(self, key, src, dest):
+        self.log.debug('uploading...')
+        key.set_contents_from_filename(src)
+        self.log.debug('upload successful')
+
+    def _multipart_transfer(self, key, src, src_file_size, dest):
+        # TODO(nandersson):
+        # * should be able to parallelize this, one for each core for example,
+        #   to increase throughput (upload parts at the same time)
+        # NOTE(nandersson):
+        # * max filesize for a PUT request to AWS S3 API is 5GB, so need to
+        #   split it up for files larger than that.. uploading in chunks of size
+        #   set in self.MULTIPART_UPLOAD_CHUNK_SIZE
+        self.log.debug('uploading using multipart...')
+        chunks = (src_file_size / self.MULTIPART_UPLOAD_CHUNK_SIZE) + 1
+        self.log.debug('splitting <%d> bytes in <%d> chunks of max <%d> bytes'
+                       % (src_file_size, chunks,
+                          self.MULTIPART_UPLOAD_CHUNK_SIZE))
+        files = self._split_file(src, src_file_size,
+                                 self.MULTIPART_UPLOAD_CHUNK_SIZE)
+        mp = self.bucket.initiate_multipart_upload(key)
+        for i, filename in enumerate(files):
+            f = open(filename, 'r')
+            self.log.debug('uploading chunk <%d>, part file <%s>..'
+                           % (i+1, filename))
+            mp.upload_part_from_file(f, i+1)
+            f.close()
+            os.remove(filename)
+        mp.complete_upload()
+        self.log.debug('upload successful')
+
+    @staticmethod
+    def _split_file(path, chunks, chunk_bytes):
+        # TODO(nandersson):
+        # * might want to move this to a more general file class
+        os.system(AWSS3.SPLIT_FILES_CMD % (chunk_bytes, path, path))
+        splitted_files = glob.glob(AWSS3.FILES_ALL_PREFIX % path)
+        splitted_files.remove(path)
+        return sorted(splitted_files)
 
     @staticmethod
     def _get_backup_filename(path):
