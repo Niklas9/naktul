@@ -1,6 +1,12 @@
 Change history
 ==============
 
+2014-04-11, 1.13
+----------------
+
+  - fixed support for AWS S3 uploading files in chunks, 1GB each as default,
+    caused problems for backup files larger than 5GB
+
 2014-01-08, 1.12
 ----------------
 
