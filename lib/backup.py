@@ -15,6 +15,7 @@ class Backup(logger.Logger):
     # TODO(niklas9):
     # * need to add better error handling, notification should run even
     #   though script crashes at some point (upload, db dump, .. etc)
+    # * remove usage of os.system and use subprocess instead
     log_file = settings.BACKUP_LOG_FILE
     ref_class = 'nback'
     filename = None
@@ -58,6 +59,9 @@ class Backup(logger.Logger):
         cmd_raw = '%s %s %s'
         if settings.BACKUP_TAR_IGNORE_FAILED_READ:
             cmd_raw = '%s --ignore-failed-read %s %s'
+        if len(settings.BACKUP_DIRS_EXCLUDE) > 0:
+            for ed in settings.BACKUP_DIRS_EXCLUDE:
+                cmd_raw += ' --exclude=\'%s\'' % ed
         cmd = cmd_raw % (self.TAR_BIN, tar_args, self.filename)
         dirs = []
         for d in settings.BACKUP_DIRS:

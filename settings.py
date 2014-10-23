@@ -1,6 +1,7 @@
 # Backup settings
 BACKUP_SERVER_NAME = 'server-name'
 BACKUP_DIRS = ('/var/www',)
+BACKUP_DIRS_EXCLUDE = []
 BACKUP_DAYS_TO_STORE = 7  # number of days
 BACKUP_SAVE_EVERY_MONTH = True  # stores the backup from the first every month
 BACKUP_LOG_FILE = 'nback.log'
@@ -8,14 +9,14 @@ BACKUP_COMPRESSION_ALGO = 'gz'  # viable options: 'bz2', 'gz'
 BACKUP_TAR_IGNORE_FAILED_READ = False
 
 # MySQL database
-USE_MYSQL = True
+USE_MYSQL = False
 BACKUP_MYSQL_DBS = ('test',)
 BACKUP_MYSQL_HOST = 'localhost'
 BACKUP_MYSQL_USER = 'root'
 BACKUP_MYSQL_PASSWD = ''
 
 # MongoDB database
-USE_MONGODB = True
+USE_MONGODB = False
 BACKUP_MONGODB_DBS = ('test',)
 
 # Notification settings

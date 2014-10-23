@@ -3,7 +3,7 @@ nback
 
 Backups files and databases (MySQL, MongoDB) to AWS S3
 
-version 1.13 2014-04-11
+version 1.14 2014-10-23
 
 author: nandersson900@gmail.com
 

@@ -1,6 +1,11 @@
 Change history
 ==============
 
+2014-10-23, 1.14
+----------------
+
+  - added support for excluding dirs, with the tar --exclude arg
+
 2014-04-11, 1.13
 ----------------
 
