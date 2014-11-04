@@ -9,8 +9,8 @@ import settings
 class MySQLDump(dbdump.DBDump):
 
     OUTPUT_FILENAME = '%s/%s.sql'
-    DUMP_QUERY = '%s -u%s'
-    DUMP_QUERY_PASSWD = '%s -u%s -p%s'
+    DUMP_QUERY = '%s -h%s -u%s'
+    DUMP_QUERY_PASSWD = DUMP_QUERY + ' -p%s'
     DUMP_QUERY_OUTPUT = '%s %s > %s'
     TMP_DIR_FMT = 'nback-dbs-mysql-%s'
     DUMP_CMD = '/usr/bin/mysqldump'
@@ -43,5 +43,8 @@ class MySQLDump(dbdump.DBDump):
         user = settings.BACKUP_MYSQL_USER
         passwd = settings.BACKUP_MYSQL_PASSWD
         if settings.BACKUP_MYSQL_PASSWD == '':
-            return MySQLDump.DUMP_QUERY % (MySQLDump.DUMP_CMD, user)
-        return MySQLDump.DUMP_QUERY_PASSWD % (MySQLDump.DUMP_CMD, user, passwd)
+            return MySQLDump.DUMP_QUERY % (MySQLDump.DUMP_CMD,
+                                           settings.BACKUP_MYSQL_HOST, user)
+        return MySQLDump.DUMP_QUERY_PASSWD % (MySQLDump.DUMP_CMD,
+                                             settings.BACKUP_MYSQL_HOST, user,
+                                             passwd)
