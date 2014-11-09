@@ -4,9 +4,9 @@
 
 import os
 
-import lib.logger as logger
-import lib.utils as utils
-import settings
+import nback.lib.logger as logger
+import nback.lib.utils as utils
+import nback.settings as settings
 
 
 class DBDump(logger.Logger):

@@ -1,37 +1,42 @@
 Change history
 ==============
 
-2014-10-23, 1.14
-----------------
+2014-11-09, 0.1.15
+------------------
+
+  - added packaging for PyPI, nback can now be installed using pip
+
+2014-10-23, 0.1.14
+------------------
 
   - added support for excluding dirs, with the tar --exclude arg
 
-2014-04-11, 1.13
-----------------
+2014-04-11, 0.1.13
+------------------
 
   - fixed support for AWS S3 uploading files in chunks, 1GB each as default,
     caused problems for backup files larger than 5GB
 
-2014-01-08, 1.12
-----------------
+2014-01-08, 0.1.12
+------------------
 
   - added support for optional SMTP settings, also supporting using TLS
     encryption for SMTP
 
-2013-12-08, 1.11
-----------------
+2013-12-08, 0.1.11
+------------------
 
   - fixed support for gzip as well, editable in the settings file
 
 
-2013-11-06, 1.1 
-----------------
+2013-11-06, 0.1.1 
+------------------
 
   - support for MongoDB
   - major refactoring of code
 
 
-2013-08-19, 1.0
-----------------
+2013-08-19, 0.1.0
+------------------
 
   - first release

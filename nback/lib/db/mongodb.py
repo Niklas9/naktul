@@ -5,8 +5,8 @@
 import commands
 import os
 
-import lib.dbdump as dbdump
-import settings
+import nback.lib.dbdump as dbdump
+import nback.settings as settings
 
 
 class MongoDBDump(dbdump.DBDump):

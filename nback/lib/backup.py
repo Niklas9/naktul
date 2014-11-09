@@ -1,13 +1,13 @@
 
 import os
 
-import lib.db.mongodb as mongodb_dump
-import lib.db.mysql as mysql_dump
-import lib.logger as logger
-import lib.notification as notification
-import lib.utils as utils
-import lib.storage.aws_s3 as aws_s3
-import settings
+import nback.lib.db.mongodb as mongodb_dump
+import nback.lib.db.mysql as mysql_dump
+import nback.lib.logger as logger
+import nback.lib.notification as notification
+import nback.lib.utils as utils
+import nback.lib.storage.aws_s3 as aws_s3
+import nback.settings as settings
 
 
 class Backup(logger.Logger):

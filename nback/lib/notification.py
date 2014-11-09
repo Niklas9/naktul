@@ -1,7 +1,7 @@
 
 import smtplib
 
-import settings
+import nback.settings as settings
 
 
 class Email(object):
