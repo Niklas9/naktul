@@ -3,6 +3,7 @@ import os
 
 import nback.lib.db.mongodb as mongodb_dump
 import nback.lib.db.mysql as mysql_dump
+import nback.lib.db.postgresql as postgresql_dump
 import nback.lib.logger as logger
 import nback.lib.notification as notification
 import nback.lib.utils as utils
@@ -37,6 +38,8 @@ class Backup(logger.Logger):
             self.dbs.append(mongodb_dump.MongoDBDump())
         if settings.USE_MYSQL:
             self.dbs.append(mysql_dump.MySQLDump())
+        if settings.USE_POSTGRESQL:
+            self.dbs.append(postgresql_dump.PostgreSQLDump())
 
     def dump_dbs(self):
         if len(self.dbs) == 0:

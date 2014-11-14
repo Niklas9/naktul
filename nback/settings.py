@@ -15,6 +15,13 @@ BACKUP_MYSQL_HOST = 'localhost'
 BACKUP_MYSQL_USER = 'root'
 BACKUP_MYSQL_PASSWD = ''
 
+# PostgreSQL database
+USE_POSTGRESQL = False
+BACKUP_POSTGRESQL_DBS = ('test',)
+BACKUP_POSTGRESQL_HOST = 'localhost'
+BACKUP_POSTGRESQL_USER = 'postgres'
+BACKUP_POSTGRESQL_PASSWD = ''
+
 # MongoDB database
 USE_MONGODB = False
 BACKUP_MONGODB_DBS = ('test',)

@@ -1,9 +1,9 @@
 nback
 =====
 
-Backups files and databases (MySQL, MongoDB) to AWS S3
+Backups files and databases (MySQL, PostgreSQL, MongoDB) to AWS S3
 
-version 1.15 2014-11-09
+version 0.1.16 2014-11-15
 
 author: nandersson900@gmail.com
 
@@ -13,6 +13,7 @@ Features
 
   - backups any given files/directories
   - uses mysqldump to take complete SQL dump of all mysql dbs
+  - uses pg_dump to take complete SQL dump of all postgresql dbs
   - uses mongodump to take complete BSON dump of all mongodb dbs
   - saves backups for 7 days back and the first of every month indefinitely
   - choose between gzip and bzip2 compression algorithms for fastest or
@@ -31,6 +32,7 @@ however this is what I've tested with.
   - bzip2 or gzip
   - Python >= 2.7.3 (only dep. python-boto)
   - MySQL >= 5.0 (optional)
+  - PostgreSQL >= 9.3 (optional)
   - MongoDB >= 2.0.4 (optional)
 
 
