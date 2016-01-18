@@ -1,12 +1,13 @@
-nback
-=====
+naktul
+======
 
-Backups files and databases (MySQL, PostgreSQL, MongoDB) to AWS S3
+![Naktul](https://vignette3.wikia.nocookie.net/starcraft/images/9/91/Naktul_SC2-HotS_Head1.jpg/revision/latest?cb=20150525032620 "Naktul")
 
-version 0.1.16 2014-11-15
+Naktul is a tool that backups files and databases (MySQL, PostgreSQL, MongoDB)
+to AWS S3.
 
-author: nandersson900@gmail.com
-
+It's named after the beautiful zerg broodmother character in Starcraft II:
+Heart of the Swarm.
 
 Features
 --------
